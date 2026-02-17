@@ -1,0 +1,70 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{lmodern}
+
+\geometry{hmargin=2cm,vmargin=1.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\begin{document}
+
+%page 1 
+\begin{center}
+    \rule{\linewidth}{0.5pt} \\
+    \Large \textbf{Equation de Korteweg-de Vries} \\
+    \rule{\linewidth}{0.5pt} \\
+    \vspace{0.5cm}
+    \[ \frac{\partial u(x,t)}{\partial t}+\epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}+\mu\frac{\partial^{3}u(x,t)}{\partial x^{3}}=0 \]
+\end{center}
+
+
+%page 2
+On a (1) :
+\[ \frac{\partial u(x,t)}{\partial t}+\epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}+\mu\frac{\partial^{3}u(x,t)}{\partial x^{3}}=0 \]
+
+(2) On pose $\xi=x-ct$
+\[ u(x,t)=z(x-ct)=z(\xi) \]
+
+Calcul des dérivées :
+\[ \frac{\partial u}{\partial t}=\frac{dz}{dt}=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial t}=-c\frac{dz}{d\xi} \]
+\[ \frac{\partial u}{\partial x}=\frac{dz}{dx}=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial x}=\frac{dz}{d\xi} \]
+\[ \frac{\partial^{3}u}{\partial x^{3}}=\left(\frac{\partial}{\partial x}\right)^{3}u=\frac{d^{3}z}{d\xi^{3}} \]
+
+On substitue (2) à (1) et on obtient :
+\[ -c\frac{dz(\xi)}{d\xi}+\epsilon z(\xi)\frac{dz(\xi)}{d\xi}+\mu\frac{d^{3}z(\xi)}{d\xi^{3}}=0 \]
+
+Transformation de la dérivée totale en dérivée partielle (intégration) :
+\[ C_{1}=-c\int dz+\epsilon\int z dz+\mu\int\frac{d^{3}z(\xi)}{d^{3}\xi} d\xi \]
+\[ C_{1}=-cz+\frac{\epsilon}{2}z^{2}+\mu\frac{d^{2}z(\xi)}{d\xi^{2}} \]
+
+
+%page 3
+On a donc :
+\[ C_{1}=-cz+\mu\frac{d^{2}z}{d\xi^{2}}+\frac{\epsilon}{2}z^{2} \]
+
+On multiplie par $\frac{dz}{d\xi}$ :
+\[ C_{1}\frac{dz}{d\xi}=-cz\frac{dz}{d\xi}+\frac{\epsilon}{2}z^{2}\frac{dz}{d\xi}+\mu\frac{d^{2}z}{d\xi^{2}}\cdot\frac{dz}{d\xi} \]
+\[ C_{1}dz=-cz dz+\frac{\epsilon}{2}z^{2}dz+\mu\frac{d^{2}z}{d\xi^{2}}dz \]
+
+On intègre des deux côtés et on pose une constante d'intégration $C_2$ :
+\[ C_{1}\int dz=-c\int z dz+\frac{\epsilon}{2}\int z^{2}dz+\mu\int\frac{d^{2}z}{d\xi^{2}}dz \]
+\[ C_{1}z+C_{2}=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}+\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \]
+
+Lorsque $x \to \pm \infty$ on a $C_{1}=C_{2}=0$  \\
+On a donc :
+\[ 0=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}+\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \]
+\[ -\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2}=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3} \]
+\[ \left(\frac{dz}{d\xi}\right)^{2}=\frac{c}{\mu}z^{2}-\frac{\epsilon}{3\mu}z^{3} \]
+\[ \left(\frac{dz}{d\xi}\right)^{2}=z^{2}\left(\frac{c}{\mu}-\frac{\epsilon}{3\mu}z\right) \]
+
+
+
+%page 4
+On utilise la méthode de la séparation des variables :
+
+\textbf{A finir ! Ou va le mu ??? jsp}
+
+\end{document}
