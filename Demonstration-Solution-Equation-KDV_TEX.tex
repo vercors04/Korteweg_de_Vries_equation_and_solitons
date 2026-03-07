@@ -63,8 +63,44 @@ On a donc :
 
 
 %page 4
-On utilise la méthode de la séparation des variables :
 
-\textbf{A finir ! Ou va le mu ??? jsp}
+
+On a :
+\[ \left(\frac{dz}{d\xi}\right)^{2} = z^{2}\left(\frac{c}{\mu}-\frac{\epsilon}{3\mu}z\right) \]
+
+\[ \frac{dz}{d\xi} = z\sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}z} \]
+
+On sépare les variables $z$ et $\xi$ :
+\[ \frac{dz}{z\sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}z}} = d\xi \]
+
+On effectue un changement de variable pour simplifier le terme sous la racine. 
+On pose :
+\[ z = \frac{3\mu}{\epsilon}g^2 \quad \implies \quad dz = \frac{6\mu}{\epsilon}g \, dg \]
+
+On substitue $z$ et $dz$ dans notre équation séparée :
+\[ \frac{\frac{6\mu}{\epsilon}g \, dg}{\frac{3\mu}{\epsilon}g^2 \sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}\left(\frac{3\mu}{\epsilon}g^2\right)}} = d\xi \]
+
+\[ \frac{2 \, dg}{g \sqrt{\frac{c}{\mu}-g^2}} = d\xi \]
+
+On intègre des deux côtés en posant $\xi_0$ comme constante d'intégration :
+\[ 2 \int \frac{dg}{g \sqrt{\frac{c}{\mu}-g^2}} = \int d\xi \]
+\[ 2 \int \frac{dg}{g \sqrt{\frac{c}{\mu}-g^2}} = \xi - \xi_0 \]
+
+%page 5
+\[ \int \frac{dx}{x\sqrt{a^2-x^2}} = -\frac{1}{a} \text{sech}^{-1}\left(\frac{x}{a}\right) \]
+
+\[ 2 \left( - \frac{1}{\sqrt{\frac{c}{\mu}}} \text{sech}^{-1}\left(\frac{g}{\sqrt{\frac{c}{\mu}}}\right) \right) = \xi - \xi_0 \]
+
+\[ \text{sech}^{-1}\left(\frac{g}{\sqrt{\frac{c}{\mu}}}\right) = -\frac{\xi - \xi_0}{2} \sqrt{\frac{c}{\mu}} \]
+
+\[ \frac{g}{\sqrt{\frac{c}{\mu}}} = \text{sech}\left( \frac{\xi - \xi_0}{2} \sqrt{\frac{c}{\mu}} \right) \]
+\[ g = \sqrt{\frac{c}{\mu}} \text{sech}\left( \frac{\xi - \xi_0}{2} \sqrt{\frac{c}{\mu}} \right) \]
+
+On a $z = \frac{3\mu}{\epsilon}g^2$ :
+\[ z(\xi) = \frac{3\mu}{\epsilon} \left( \sqrt{\frac{c}{\mu}} \text{sech}\left( \frac{\xi - \xi_0}{2} \sqrt{\frac{c}{\mu}} \right) \right)^2 \]
+\[ z(\xi) = \frac{3\mu}{\epsilon} \frac{c}{\mu} \text{sech}^2\left( \frac{\xi - \xi_0}{2} \sqrt{\frac{c}{\mu}} \right) \]
+
+La solution finale est donc :
+\[ z(\xi) = \frac{3c}{\epsilon} \text{sech}^2\left( \frac{1}{2}\sqrt{\frac{c}{\mu}}(\xi - \xi_0) \right) \]
 
 \end{document}
