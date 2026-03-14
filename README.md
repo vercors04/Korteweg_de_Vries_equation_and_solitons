@@ -20,4 +20,4 @@ Ce projet vise à résoudre numériquement l'équation KdV et à étudier le com
 - <https://perso.univ-lyon1.fr/marc.buffat/COURS/COURSDF_HTML/chap2.html>
 - <https://lmah.univ-lehavre.fr/~ambrosio/teaching/CoursL3Phy/Chap3.pdf>
 - <https://www.colorado.edu/amath/sites/default/files/attached-files/introduction_to_finite_differences_3.pdf>
-- <file:///C:/Users/xavkr/OneDrive/Documents/univ_rennes/RNDP/poly_rndp_balac_24.pdf>
+- <poly_rndp_balac_24.pdf>
