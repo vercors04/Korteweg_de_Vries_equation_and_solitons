@@ -4,6 +4,7 @@
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{geometry}
 \usepackage{lmodern}
+\usepackage{tcolorbox}
 
 \geometry{hmargin=2cm,vmargin=1.5cm}
 \setlength{\parindent}{0pt}
@@ -20,76 +21,134 @@
     \[ \frac{\partial u(x,t)}{\partial t}+\epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}+\mu\frac{\partial^{3}u(x,t)}{\partial x^{3}}=0 \]
 \end{center}
 
-
 %page 2
-On a (1) :
-\[ \frac{\partial u(x,t)}{\partial t}+\epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}+\mu\frac{\partial^{3}u(x,t)}{\partial x^{3}}=0 \]
+On a :
+\begin{equation}
+  \frac{\partial u(x,t)}{\partial t} 
+  + \epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}
+  + \mu \frac{\partial^{3}u(x,t)}{\partial x^{3}} = 0
+  \label{eq:initiale}
+\end{equation}
 
-(2) On pose $\xi=x-ct$
-\[ u(x,t)=z(x-ct)=z(\xi) \]
+\vspace{0.5cm}
+On pose $\xi=x-ct$
+\begin{equation}
+  u(x,t)=z(x-ct)=z(\xi)
+  \label{eq:z}
+\end{equation}
 
+\vspace{0.5cm}
 Calcul des dérivées :
-\[ \frac{\partial u}{\partial t}=\frac{dz}{dt}=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial t}=-c\frac{dz}{d\xi} \]
-\[ \frac{\partial u}{\partial x}=\frac{dz}{dx}=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial x}=\frac{dz}{d\xi} \]
-\[ \frac{\partial^{3}u}{\partial x^{3}}=\left(\frac{\partial}{\partial x}\right)^{3}u=\frac{d^{3}z}{d\xi^{3}} \]
+\begin{align*}
+\frac{\partial u}{\partial t} =\frac{dz}{dt}
+&=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial t}=-c\frac{dz}{d\xi} \\
+\frac{\partial u}{\partial x}=\frac{dz}{dx}
+&=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial x}=\frac{dz}{d\xi} \\
+\frac{\partial^{3}u}{\partial x^{3}} &=
+\left(\frac{\partial}{\partial x}\right)^{3}u=\frac{d^{3}z}{d\xi^{3}}
+\end{align*}
 
-On substitue (2) à (1) et on obtient :
-\[ -c\frac{dz(\xi)}{d\xi}+\epsilon z(\xi)\frac{dz(\xi)}{d\xi}+\mu\frac{d^{3}z(\xi)}{d\xi^{3}}=0 \]
+On substitue (\ref{eq:z}) à (\ref{eq:initiale}) et on obtient :
+\[ \boxed{-c\frac{dz(\xi)}{d\xi}+\epsilon z(\xi)\frac{dz(\xi)}{d\xi}+\mu\frac{d^{3}z(\xi)}{d\xi^{3}}=0} \]
 
 Transformation de la dérivée totale en dérivée partielle (intégration) :
-\[ C_{1}=-c\int dz+\epsilon\int z dz+\mu\int\frac{d^{3}z(\xi)}{d^{3}\xi} d\xi \]
-\[ C_{1}=-cz+\frac{\epsilon}{2}z^{2}+\mu\frac{d^{2}z(\xi)}{d\xi^{2}} \]
+\begin{align*}
+  C_{1} &=-c\int dz+\epsilon\int z dz+\mu\int\frac{d^{3}z(\xi)}{d^{3}\xi} d\xi \\ 
+  C_{1} &=-cz(\xi)+\frac{\epsilon}{2}z^{2}(\xi)+\mu\frac{d^{2}z(\xi)}{d\xi^{2}}
+\end{align*}
 
 
 %page 3
-On a donc :
-\[ C_{1}=-cz+\mu\frac{d^{2}z}{d\xi^{2}}+\frac{\epsilon}{2}z^{2} \]
-
 On multiplie par $\frac{dz}{d\xi}$ :
-\[ C_{1}\frac{dz}{d\xi}=-cz\frac{dz}{d\xi}+\frac{\epsilon}{2}z^{2}\frac{dz}{d\xi}+\mu\frac{d^{2}z}{d\xi^{2}}\cdot\frac{dz}{d\xi} \]
-\[ C_{1}dz=-cz dz+\frac{\epsilon}{2}z^{2}dz+\mu\frac{d^{2}z}{d\xi^{2}}dz \]
+\begin{align*}
+  C_{1}\frac{dz}{d\xi} &=-cz\frac{dz}{d\xi}+\frac{\epsilon}{2}z^{2}\frac{dz}{d\xi}
+  +\mu\frac{d^{2}z}{d\xi^{2}}\cdot\frac{dz}{d\xi} \\
+  C_{1}dz &=-cz dz+\frac{\epsilon}{2}z^{2}dz+\mu\frac{d^{2}z}{d\xi^{2}}dz
+\end{align*}
 
+\newpage
 On intègre des deux côtés et on pose une constante d'intégration $C_2$ :
-\[ C_{1}\int dz=-c\int z dz+\frac{\epsilon}{2}\int z^{2}dz+\mu\int\frac{d^{2}z}{d\xi^{2}}dz \]
-\[ C_{1}z+C_{2}=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}+\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \]
+\begin{align*}
+  C_{1}\int dz &=-c\int z dz+\frac{\epsilon}{2}\int z^{2}dz
+  +\mu\int\frac{d^{2}z}{d\xi^{2}}dz \\
+  C_{1}z+C_{2} &=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}
+  +\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2}
+\end{align*}
 
-Lorsque $x \to \pm \infty$ on a $C_{1}=C_{2}=0$  \\
-On a donc :
-\[ 0=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}+\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \]
-\[ -\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2}=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3} \]
-\[ \left(\frac{dz}{d\xi}\right)^{2}=\frac{c}{\mu}z^{2}-\frac{\epsilon}{3\mu}z^{3} \]
-\[ \left(\frac{dz}{d\xi}\right)^{2}=z^{2}\left(\frac{c}{\mu}-\frac{\epsilon}{3\mu}z\right) \]
+Lorsque $x \to \pm \infty$ on a : $z \to 0$ ; $\frac{dz}{d\xi} \to 0$ ; $\frac{d^{2}z}{d\xi^{2}}\to 0$
+
+Ce qui implique que $C_{1}=C_{2}=0$ 
+
+
+Ainsi :
+\begin{align*}
+  0 &=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}+\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \\
+  -\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} &=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3} \\
+  \left(\frac{dz}{d\xi}\right)^{2} 
+  &=\frac{c}{\mu}z^{2}-\frac{\epsilon}{3\mu}z^{3} \\
+  \left(\frac{dz}{d\xi}\right)^{2} 
+  &=z^{2}\left(\frac{c}{\mu}-\frac{\epsilon}{3\mu}z\right)
+\end{align*}
 
 
 
 %page 4
 
 
-On a :
-\[ \left(\frac{dz}{d\xi}\right)^{2} = z^{2}\left(\frac{c}{\mu}-\frac{\epsilon}{3\mu}z\right) \]
-
-\[ \frac{dz}{d\xi} = z\sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}z} \]
+On a donc :
+\[ \boxed{\frac{dz}{d\xi} = z\sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}z}} \]
 
 On sépare les variables $z$ et $\xi$ :
-\[ \frac{dz}{z\sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}z}} = d\xi \]
+\begin{equation}
+  \frac{dz}{z\sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}z}} = d\xi
+  \label{eq:separee}
+\end{equation}
 
 On effectue un changement de variable pour simplifier le terme sous la racine. 
+
 On pose :
-\[ z = \frac{3\mu}{\epsilon}g^2 \quad \implies \quad dz = \frac{6\mu}{\epsilon}g \, dg \]
+\[
+\begin{cases}
+  z &= \frac{3\mu}{\epsilon}g^2 \\
+  dz &= \frac{6\mu}{\epsilon}g \, dg 
+\end{cases}
+\] 
 
-On substitue $z$ et $dz$ dans notre équation séparée :
-\[ \frac{\frac{6\mu}{\epsilon}g \, dg}{\frac{3\mu}{\epsilon}g^2 \sqrt{\frac{c}{\mu}-\frac{\epsilon}{3\mu}\left(\frac{3\mu}{\epsilon}g^2\right)}} = d\xi \]
+\begin{tcolorbox}[
+  colback=black!5!white,
+  colframe=white!50!black,
+  title=Rappel,
+  fonttitle=\bfseries
+]
+\begin{equation}
+  \int \frac{dx}{x\sqrt{a^{2} - x^{2}}} = \frac{1}{a} sech^{-1} \Big(\frac{x}{a}\Big)
+  \label{eq:rappel}
+\end{equation}
+\end{tcolorbox}
 
-\[ \frac{2 \, dg}{g \sqrt{\frac{c}{\mu}-g^2}} = d\xi \]
 
-On intègre des deux côtés en posant $\xi_0$ comme constante d'intégration :
-\[ 2 \int \frac{dg}{g \sqrt{\frac{c}{\mu}-g^2}} = \int d\xi \]
-\[ 2 \int \frac{dg}{g \sqrt{\frac{c}{\mu}-g^2}} = \xi - \xi_0 \]
+On substitue $z$ et $dz$ dans (\ref{eq:separee}) :
+\begin{align*}
+\frac{\frac{6\mu}{\epsilon}g \, dg}{\frac{3\mu}{\epsilon}g^2 \sqrt{\frac{c}{\mu}
+-\frac{\epsilon}{3\mu}\left(\frac{3\mu}{\epsilon}g^2\right)}} &= d\xi \\
+\frac{2 \, dg}{g \sqrt{\frac{c}{\mu}-g^2}} &= d\xi
+\end{align*}
+
+\newpage
+
+Cette partie de la demonstration est à revoir (choix des bornes de l'integrale)
+
+On intègre des deux côtés :
+\begin{align*}
+  2 \int_{0}^{g} \frac{d\eta}{\eta \sqrt{\frac{c}{\mu}-\eta^2}} &= \int_{\xi_{0}}^{\xi} d\zeta \\
+  2 \int_{0}^{g} \frac{d\eta}{\eta \sqrt{\frac{c}{\mu}-\eta^2}} &= (\xi - \xi_0) \\
+  2 \left( - \frac{1}{\sqrt{\frac{c}{\mu}}} 
+  \text{sech}^{-1}\left(\frac{g}{\sqrt{\frac{c}{\mu}}}\right) \right)
+  &\overset{(\ref{eq:rappel})}{=} (\xi - \xi_0) 
+\end{align*}
 
 %page 5
-\[ \int \frac{dx}{x\sqrt{a^2-x^2}} = -\frac{1}{a} \text{sech}^{-1}\left(\frac{x}{a}\right) \]
 
-\[ 2 \left( - \frac{1}{\sqrt{\frac{c}{\mu}}} \text{sech}^{-1}\left(\frac{g}{\sqrt{\frac{c}{\mu}}}\right) \right) = \xi - \xi_0 \]
 
 \[ \text{sech}^{-1}\left(\frac{g}{\sqrt{\frac{c}{\mu}}}\right) = -\frac{\xi - \xi_0}{2} \sqrt{\frac{c}{\mu}} \]
 
