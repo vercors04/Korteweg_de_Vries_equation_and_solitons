@@ -13,8 +13,10 @@ jobs:
         with:
           root_file: |
             TEX/Rapport.tex
-            TEX/Demonstration-Solution-Equation-KDV_TEX.tex
-          args: "-pdf -interaction=nonstopmode -halt-on-error -outdir=."
+            TEX/Demonstration-Solution-Equation-KDV.tex
+          args: "-pdf -interaction=nonstopmode -halt-on-error -outdir=../"
+          working_directory: TEX
+
 
       - name: Upload PDF Artifacts
         uses: actions/upload-artifact@v4
