@@ -12,10 +12,12 @@ venv/
 */.ipynb_checkpoints/
 
 *.synctex.gz
-*.pdf
 *.aux
 *.fdb_latexmk
 *.fls
 *.log
 *.synctex(busy)
 *.toc
+
+TEX/*.pdf
+!/*.pdf
