@@ -26,37 +26,68 @@
 \section{Construction du Schéma par différence finie}
 
 
-On discrétise à la fois la variable x et la variable t. On définit pour ça un maillage ;  $u_i^n$ est la solution approchée au point $x_i = i\Delta x$ et à l'instant $t_n = n\Delta t$. 
+On discrétise à la fois la variable x et la variable t. On définit pour ça un maillage ;  $u_i^n$ est la solution approchée au point $x_i = i h_x$ et à l'instant $t_n = n h_t$. 
 
-\subsection{En espace}
-Pour la dérivée première en espace on utilise la formule de différence finie centrée, qui garantit une précision d'ordre 2 : $\frac{\partial u}{\partial x}(x_i) \approx \frac{u_{i+1} - u_{i-1}}{2\Delta x}$. 
+\subsection{questionement sur le schéma final utilisé}
+
+
+\subsubsection{en espace}
+Pour la dérivée première en espace on utilise la formule de différence finie centrée, qui garantit une précision d'ordre 2 : $\frac{\partial u}{\partial x}(x_i) \approx \frac{u_{i+1} - u_{i-1}}{2 h_x}$. 
 
 Pour la dérivée troisième, on utilise les formules de Taylor Young pour construire une approximation à l'ordre 3 (\hyperref[annexe:demo1]{(1)} démonstration). 
-$\frac{\partial^3 u}{\partial x^3}(x_i) \approx \frac{u_{i+2} - 2u_{i+1} + 2u_{i-1} - u_{i-2}}{2\Delta x^3}$
+$\frac{\partial^3 u}{\partial x^3}(x_i) \approx \frac{u_{i+2} - 2u_{i+1} + 2u_{i-1} - u_{i-2}}{2 h_x^3}$
 
-On a donc $\frac{d u_i}{dt} = - \epsilon u_i \frac{u_{i+1} - u_{i-1}}{2\Delta x} - \mu \frac{u_{i+2} - 2u_{i+1} + 2u_{i-1} - u_{i-2}}{2\Delta x^3}$
+On a donc $\frac{d u_i}{dt} = - \epsilon u_i \frac{u_{i+1} - u_{i-1}}{2 h_x} - \mu \frac{u_{i+2} - 2u_{i+1} + 2u_{i-1} - u_{i-2}}{2 h_x^3}$
 
-\subsection{En temps}
+\subsubsection{En temps}
 
 Pour le temps : 
 
 -est ce qu'on utilise une formule de DF centrée classique, mais du coup on a besoin du temps futur donc ça complique l'histoire (je sais même pas comment résoudre ça (systèmes de matrices probablement + conditions aux bords ?)
 
--On peut utiliser un df progressive $\frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{n+1} - u_i^n}{\Delta t}$, ensuite on isole $u_i^{n+1}$ d'un coté de l'eq car c'est ce qu'on cherche (le point actuel au temps $t+\Delta t$)
+-On peut utiliser un df progressive $\frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{n+1} - u_i^n}{h_t}$, ensuite on isole $u_i^{n+1}$ d'un coté de l'eq car c'est ce qu'on cherche (le point actuel au temps $t+h_t$)
 
 -On utilise runge kutta, il faut s'y replonger
 
--autre ? 
+-autre ?
 
-
-\subsection{Conditions limites}
+\subsubsection{Conditions limites}
 
 Dans tout les problèmes qu'on a connu on avait des CL et un domaine fermé mais est ce qu'on veut un dmaine fermé ici ? En soit on est pas obliger. On cherche à étudier le mouvement de la vague sans limites. 
-Et du coup si on en a pas on pourrai aller piocher les points hors domaines (ex $u_{i-2}$ en $i=1$) à la fin de la matrice, ce qui ferait donc une "boucle". 
+Et du coup si on en a pas on pourrai aller piocher les points hors domaines (ex $u_{i-2}$ en $i=1$) à la fin de la matrice, ce qui ferait donc une "boucle" -> "CL periodiques"
 
-\subsection{Étude du schéma}
+\subsubsection{Étude du schéma}
 
 Consistance, stabilité et convergence à vérifier ou bien ? 
+
+\newpage
+
+\subsection{Proposition d'un schéma}
+
+Considérons une subdivision uniforme $(x_{j})_{j=0,\dots,J}$ de l'intervalle $[a, b]$ de pas $h_{x}$ constant. Nous considérons également un intervalle de temps de la forme $[0, T]$ où $T>0$ et une subdivision uniforme $(t_{n})_{n=0,\dots,N}$ de l'intervalle $[0, T]$ de pas $h_{t}$ constant.
+
+On cherche à déterminer une valeur approchée $u_{j}^{[n]}$ de la solution $u(t_{n},x_{j})$ pour tous $n\in\{0,\dots,N-1\}, j\in\{2,\dots,J-2\}$.
+
+\subsubsection*{Schémas aux différences finies}
+
+Pour tout $x\in[a,b]$ et pour tout $n\in\{0,\dots,N-1\}$, on considère l'approximation par différence finie progressive :
+$$\frac{\partial}{\partial t}u(t_{n},x_{j})\approx\frac{u_{j}^{[n+1]}-u_{j}^{[n]}}{h_{t}}$$
+
+Pour les dérivées spatiales de l'équation, on considère les approximations par différences finies centrées au temps $t_{n}$ :
+$$\frac{\partial}{\partial x}u(t_{n},x_{j})\approx\frac{u_{j+1}^{[n]}-u_{j-1}^{[n]}}{2h_{x}}$$
+
+$$\frac{\partial^{3}}{\partial x^{3}}u(t_{n},x_{j})\approx\frac{u_{j+2}^{[n]}-2u_{j+1}^{[n]}+2u_{j-1}^{[n]}-u_{j-2}^{[n]}}{2h_{x}^{3}}$$
+
+\subsubsection*{Problème discret}
+
+On cherche une approximation $u_{j}^{[n]}$ de $u(t_{n},x_{j})$ :
+$$\frac{u_{j}^{[n+1]}-u_{j}^{[n]}}{h_{t}}+\epsilon u_{j}^{[n]}\frac{u_{j+1}^{[n]}-u_{j-1}^{[n]}}{2h_{x}}+\mu\frac{u_{j+2}^{[n]}-2u_{j+1}^{[n]}+2u_{j-1}^{[n]}-u_{j-2}^{[n]}}{2h_{x}^{3}}=0$$
+
+On a donc pour tout $j\in\{2,\dots,J-2\}$ :
+$$u_{j}^{[n+1]}=u_{j}^{[n]}-\frac{\epsilon h_{t}}{2h_{x}}u_{j}^{[n]}\left(u_{j+1}^{[n]}-u_{j-1}^{[n]}\right)-\frac{\mu h_{t}}{2h_{x}^{3}}\left(u_{j+2}^{[n]}-2u_{j+1}^{[n]}+2u_{j-1}^{[n]}-u_{j-2}^{[n]}\right)$$
+
+\subsubsection*{Stabilité}
+
 
 \newpage
 
