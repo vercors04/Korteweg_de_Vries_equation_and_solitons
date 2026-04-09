@@ -13,7 +13,7 @@ Ce projet vise à résoudre numériquement l'équation KdV et à étudier le com
 - <https://lsa.umich.edu/content/dam/math-assets/reu-su22/reu-2023/Shi,Haoyan%20-%20Soliton%20Solutions%20to%20the%20Korteweg-de%20Vries%20Equation.pdf>
 - <https://math.arizona.edu/~gabitov/teaching/141/math_485/KDV.pdf>
 - <https://www.youtube.com/watch?v=9hBydmE9EQ0>
-
+- $sech^{-1}'$ :<https://math.libretexts.org/Bookshelves/Calculus/Supplemental_Modules_(Calculus)/Integral_Calculus/4:_Transcendental_Functions/4.9:_Hyperbolic_Functions/Derivative_of_arcsech>
 
 ## Demonstration approximation par DF d'une derivee d'ordre 3
 
