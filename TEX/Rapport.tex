@@ -13,7 +13,6 @@
 
 \begin{document}
 
-%page 1 
 \begin{center}
     \rule{\linewidth}{0.5pt} \\
     \Large \textbf{Equation de Korteweg-de Vries} \\
@@ -22,74 +21,120 @@
     \[ \frac{\partial u(x,t)}{\partial t}+\epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}+\mu\frac{\partial^{3}u(x,t)}{\partial x^{3}}=0 \]
 \end{center}
 
-
-\section{Construction du Schéma par différence finie}
-
-
-On discrétise à la fois la variable x et la variable t. On définit pour ça un maillage ;  $u_i^n$ est la solution approchée au point $x_i = i h_x$ et à l'instant $t_n = n h_t$. 
-
-\subsection{questionement sur le schéma final utilisé}
-
-
-\subsubsection{en espace}
-Pour la dérivée première en espace on utilise la formule de différence finie centrée, qui garantit une précision d'ordre 2 : $\frac{\partial u}{\partial x}(x_i) \approx \frac{u_{i+1} - u_{i-1}}{2 h_x}$. 
-
-Pour la dérivée troisième, on utilise les formules de Taylor Young pour construire une approximation à l'ordre 3 (\hyperref[annexe:demo1]{(1)} démonstration). 
-$\frac{\partial^3 u}{\partial x^3}(x_i) \approx \frac{u_{i+2} - 2u_{i+1} + 2u_{i-1} - u_{i-2}}{2 h_x^3}$
-
-On a donc $\frac{d u_i}{dt} = - \epsilon u_i \frac{u_{i+1} - u_{i-1}}{2 h_x} - \mu \frac{u_{i+2} - 2u_{i+1} + 2u_{i-1} - u_{i-2}}{2 h_x^3}$
-
-\subsubsection{En temps}
-
-Pour le temps : 
-
--est ce qu'on utilise une formule de DF centrée classique, mais du coup on a besoin du temps futur donc ça complique l'histoire (je sais même pas comment résoudre ça (systèmes de matrices probablement + conditions aux bords ?)
-
--On peut utiliser un df progressive $\frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{n+1} - u_i^n}{h_t}$, ensuite on isole $u_i^{n+1}$ d'un coté de l'eq car c'est ce qu'on cherche (le point actuel au temps $t+h_t$)
-
--On utilise runge kutta, il faut s'y replonger
-
--autre ?
-
-\subsubsection{Conditions limites}
-
-Dans tout les problèmes qu'on a connu on avait des CL et un domaine fermé mais est ce qu'on veut un dmaine fermé ici ? En soit on est pas obliger. On cherche à étudier le mouvement de la vague sans limites. 
-Et du coup si on en a pas on pourrai aller piocher les points hors domaines (ex $u_{i-2}$ en $i=1$) à la fin de la matrice, ce qui ferait donc une "boucle" -> "CL periodiques"
-
-\subsubsection{Étude du schéma}
-
-Consistance, stabilité et convergence à vérifier ou bien ? 
-
-\newpage
-
-\subsection{Proposition d'un schéma}
+\section{Discrétisation et approximations générales}
 
 Considérons une subdivision uniforme $(x_{j})_{j=0,\dots,J}$ de l'intervalle $[a, b]$ de pas $h_{x}$ constant. Nous considérons également un intervalle de temps de la forme $[0, T]$ où $T>0$ et une subdivision uniforme $(t_{n})_{n=0,\dots,N}$ de l'intervalle $[0, T]$ de pas $h_{t}$ constant.
 
-On cherche à déterminer une valeur approchée $u_{j}^{[n]}$ de la solution $u(t_{n},x_{j})$ pour tous $n\in\{0,\dots,N-1\}, j\in\{2,\dots,J-2\}$.
 
-\subsubsection*{Schémas aux différences finies}
+Pour la dérivée temporelle, on considère l'approximation par différence finie progressive :
+\[ \frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} \]
 
-Pour tout $x\in[a,b]$ et pour tout $n\in\{0,\dots,N-1\}$, on considère l'approximation par différence finie progressive :
-$$\frac{\partial}{\partial t}u(t_{n},x_{j})\approx\frac{u_{j}^{[n+1]}-u_{j}^{[n]}}{h_{t}}$$
+Pour la dérivée première en espace, on utilise la formule de différences finies centrées (précision d'ordre 2) : 
+\[ \frac{\partial u}{\partial x}(x_i, t_n) \approx \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \]
 
-Pour les dérivées spatiales de l'équation, on considère les approximations par différences finies centrées au temps $t_{n}$ :
-$$\frac{\partial}{\partial x}u(t_{n},x_{j})\approx\frac{u_{j+1}^{[n]}-u_{j-1}^{[n]}}{2h_{x}}$$
+Pour la dérivée troisième en espace, voir (\hyperref[annexe:demo1]{1}) (ordre 2) :
+\[ \frac{\partial^3 u}{\partial x^3}(x_i, t_n) \approx \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \]
 
-$$\frac{\partial^{3}}{\partial x^{3}}u(t_{n},x_{j})\approx\frac{u_{j+2}^{[n]}-2u_{j+1}^{[n]}+2u_{j-1}^{[n]}-u_{j-2}^{[n]}}{2h_{x}^{3}}$$
+\section{Schéma de Crank-Nicolson}
 
-\subsubsection*{Problème discret}
+Pour garantir la stabilité inconditionnelle et une précision d'ordre 2 en temps, nous appliquons le schéma de Crank-Nicolson. 
 
-On cherche une approximation $u_{j}^{[n]}$ de $u(t_{n},x_{j})$ :
-$$\frac{u_{j}^{[n+1]}-u_{j}^{[n]}}{h_{t}}+\epsilon u_{j}^{[n]}\frac{u_{j+1}^{[n]}-u_{j-1}^{[n]}}{2h_{x}}+\mu\frac{u_{j+2}^{[n]}-2u_{j+1}^{[n]}+2u_{j-1}^{[n]}-u_{j-2}^{[n]}}{2h_{x}^{3}}=0$$
+On évalue l'équation au point $t_{n+1/2}$, ce qui donne $\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t}$.
 
-On a donc pour tout $j\in\{2,\dots,J-2\}$ :
-$$u_{j}^{[n+1]}=u_{j}^{[n]}-\frac{\epsilon h_{t}}{2h_{x}}u_{j}^{[n]}\left(u_{j+1}^{[n]}-u_{j-1}^{[n]}\right)-\frac{\mu h_{t}}{2h_{x}^{3}}\left(u_{j+2}^{[n]}-2u_{j+1}^{[n]}+2u_{j-1}^{[n]}-u_{j-2}^{[n]}\right)$$
+Par rapport au terme non linéaire $\epsilon u \frac{\partial u}{\partial x}$, nous choisissons de le linéariser afin de conserver un système qu'on puisse résoudre sous forme matricielle. $u$ en facteur de la dérivée est « figée » à sa valeur connue $u_i^{[n]}$.
 
-\subsubsection*{Stabilité}
+Nous avons donc :
+\begin{multline*}
+\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} + \epsilon u_i^{[n]} \left[ \frac{1}{2} \left( \frac{u_{i+1}^{[n+1]} - u_{i-1}^{[n+1]}}{2 h_x} \right) + \frac{1}{2} \left( \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right) \right] \\
++ \frac{\mu}{2} \left[ \frac{u_{i+2}^{[n+1]} - 2u_{i+1}^{[n+1]} + 2u_{i-1}^{[n+1]} - u_{i-2}^{[n+1]}}{2 h_x^3} \right] \\
++ \frac{\mu}{2} \left[ \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right] = 0
+\end{multline*}
 
+\subsection{Formulation matricielle du problème discret}
+
+On construit un système linéaire de la forme $A U^{n+1} = B U^n$, (on sépare les termes en $n+1$ des termes évalués au temps $n$).
+
+On multiplie par $h_t$ et on poste les constantes :
+\[ \alpha = \frac{\mu h_t}{h_x^3} \quad \text{et} \quad \beta = \frac{\epsilon h_t}{h_x} \]
+
+L'équation devient :
+\begin{multline*}
+u_i^{[n+1]} - u_i^{[n]} + \frac{\beta}{4} u_i^{[n]} \left( u_{i+1}^{[n+1]} - u_{i-1}^{[n+1]} + u_{i+1}^{[n]} - u_{i-1}^{[n]} \right) \\
++ \frac{\alpha}{4} \left( u_{i+2}^{[n+1]} - 2u_{i+1}^{[n+1]} + 2u_{i-1}^{[n+1]} - u_{i-2}^{[n+1]} + u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]} \right) = 0
+\end{multline*}
+
+Puis :
+\begin{multline*}
+u_i^{[n+1]} + \frac{\beta}{4} u_i^{[n]} \left( u_{i+1}^{[n+1]} - u_{i-1}^{[n+1]} \right) + \frac{\alpha}{4} \left( u_{i+2}^{[n+1]} - 2u_{i+1}^{[n+1]} + 2u_{i-1}^{[n+1]} - u_{i-2}^{[n+1]} \right) \\
+= u_i^{[n]} - \frac{\beta}{4} u_i^{[n]} \left( u_{i+1}^{[n]} - u_{i-1}^{[n]} \right) - \frac{\alpha}{4} \left( u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]} \right)
+\end{multline*}
+
+On définit $\gamma_i^{[n]}$ :
+\[ \gamma_i^{[n]} = \frac{\alpha}{2} - \frac{\beta}{4} u_i^{[n]} \]
+
+Ce qui donne :
+\begin{multline} \label{eq:schema_final}
+- \frac{\alpha}{4} u_{i-2}^{[n+1]} + \gamma_i^{[n]} u_{i-1}^{[n+1]} + u_i^{[n+1]} - \gamma_i^{[n]} u_{i+1}^{[n+1]} + \frac{\alpha}{4} u_{i+2}^{[n+1]} \\
+= \frac{\alpha}{4} u_{i-2}^{[n]} - \gamma_i^{[n]} u_{i-1}^{[n]} + u_i^{[n]} + \gamma_i^{[n]} u_{i+1}^{[n]} - \frac{\alpha}{4} u_{i+2}^{[n]}
+\end{multline}
+
+Ce système forme une équation matricielle creuse $A U^{n+1} = B U^n$ asymétrique, qu'il suffit d'inverser à chaque itération temporelle.
+
+\subsection{Conditions aux limites}
+
+Avec la discrétisation de la dérivée troisième nous avons besoin des points $i-1$, $i+1$, $i-2$, $i+2$ pour une équation au nœud $i$.
+
+Nous imposons des conditions de Dirichlet homogènes aux extrémités :
+\[ u_0^{[n]} = u_1^{[n]} = 0 \quad \text{et} \quad u_{Nx-2}^{[n]} = u_{Nx-1}^{[n]} = 0 \quad \forall n \]
+
+\subsubsection{Limites de l'approche : le problème de la linéarisation}
+
+Le terme non linéaire $\epsilon u \frac{\partial u}{\partial x}$ a été linéarisé en figeant $\epsilon u_i^{[n]}$ à l'instant précédent pour conserver un système matriciel classique $A U^{n+1} = B U^n$. 
+
+Ceci cause différents problème lors de la simulation :
+\begin{itemize}
+    \item \textbf{Ralentissement :} L'onde accumule un retard par rapport à la solution analytique.
+    \item \textbf{Perte d'amplitude :} L'amplitude de l'onde diminue au cours du temps.
+    \item \textbf{Fausses collisions :} Elle en avait parler (je crois) mais je sais plus.
+\end{itemize}
+
+Pour rendre le schéma pertinent il faudrait conserver la non linéarité. 
+
+\textbf{PARTIE A COMPLETER/SUPPRIMER}
+
+\section{Schéma Crank-Nicolson avec la méthode prédicteur-correcteur}
+
+Dans notre schéma de Crank-Nicolson précédent, nous ne sommes pas centrés en $t_{n+1/2}$ sur le terme non linéaire (on fige $\epsilon u$ au temps $n$), ce qui introduit une erreur et dégrade la précision ; on évalue tout en $t_{n+1/2}$ sauf ce terme, qui nous fait revenir à une précision d'ordre 1 en temps. On va donc calculer le terme non linéaire au temps $t_{n+1/2}$ en additionnant le $u^{n+1}$ futur et le $u^n$ présent puis en divisant par 2. 
+
+Dans un premier temps, on considère que le terme non linéaire est égal à $u^n$ et on résout le système $A(U^n) U^* = B(U^n) U^n$. $U^*$ est une prédiction de l'état futur, qui est donc faussée à cause du terme non linéaire figé sur le passé. On a donc une idée de là où l'on va être et on sait là où l'on est. Ainsi, on peut calculer le terme non linéaire $u_{milieu} = \frac{u^n + u^*}{2}$, qui est une approximation au temps $t_{n+1/2}$, plus fidèle à la réalité que ce qu'elle était juste au temps $n$. 
+
+Maintenant, on refait la résolution mais au lieu de mettre $u^n$ dans la variable $\gamma$, on met $u_{milieu}$, ce qui nous donne une solution d'ordre 2. 
+\textbf{Cependant, c'est toujours une linéarisation donc jsp.}
+
+\section{Schéma Explicite}
+
+Pour éviter d'avoir à linéariser le terme non linéaire on construit un schéma complètement explicite, l'intégralité des dérivées spatiales est évaluée à l'instant connu $t_n$.
+
+Notr discrétisation est :
+\begin{equation*}
+\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} + \epsilon u_i^{[n]} \left( \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right) + \mu \left( \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right) = 0
+\end{equation*}
+
+Pour ce schéma, nous n'avons pas besoin de faire une inversion des matrices car l'état futur $u^{n+1}$ est calculé uniquement à partir des informations déjà connues aux temps présents et passés (ce qui rends l'algorithme plus performant qu'avec la méthode de Crank-Nicolson). Cependant ce schéma est limité à l'ordre 1 en temps. Pour pallier à cela nous utilisons le schéma de "Leap-Frog", qui nous permet d'améliorer la précision bien que nous restons d'ordre 1 en temps à cause de la première itération. C'est un schéma à trois niveaux de temps : $t_{n-1}$, $t_n$, $t_{n+1}$. On centre la dérivée temporelle sur l'instant $t_n$ et on obtient $$ \frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{[n+1]} - u_i^{[n-1]}}{2 h_t} $$. 
+
+L'équation discrétisée devient alors :$$ \frac{u_i^{[n+1]} - u_i^{[n-1]}}{2 h_t} + \epsilon u_i^{[n]} \left[ \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right] + \mu \left[ \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right] = 0 $$
+
+Avec ce schéma un des problème est que nous ne pouvons pas démarrer la simulation à $n=0$ puisque $t_{-1}$ n'existe pas. Ainsi, on effectue le tout premier pas de temps avec un schéma d'Euler explicite (ordre 1) :$$ u_i^{[1]} = u_i^{[0]} - h_t \cdot \text{F}(u_i^{[0]}) $$
+
+Un autre inconvénient de ce schéma est que nous devons imposer une condition CFL pour assurer la stabilité. La contrainte de cette condition est $\Delta t = \mathcal{O}(\Delta x^3)$. Cela pose problème car lorsque l'on veut augmenter la précision du pas en espace on est obligé de drastiquement diminuer $h_t$, ce qui rend le calcul beaucoup plus long si l'on veut une précision en espace plus élevée. 
+Cela n'est pas le cas avec la méthode de Crank-Nicolson qui est inconditionellement stable. 
+
+
+\textbf{trucs des contraintes à dévelloper, pas sur de tout}
 
 \newpage
+\appendix
+\begin{footnotesize}
 
 \phantomsection
 \section*{Annexe}
@@ -110,7 +155,7 @@ Par ailleurs, d'après la formule de Taylor-Lagrange à l'ordre 5 appliquée à 
 u(x-h) = u(x) - h u'(x) + \frac{1}{2}h^2 u''(x) - \frac{1}{6}h^3 u^{(3)}(x) + \frac{1}{24}h^4 u^{(4)}(x) - \frac{1}{120}h^5 u^{(5)}(x+\theta_2 h). \label{eq:t-}
 \end{equation}
 
-On soustrait $(\ref{eq:t+})  et  (\ref{eq:t-})$ :
+On soustrait $(\ref{eq:t+})$ et $(\ref{eq:t-})$ :
 \begin{equation}
 u(x+h) - u(x-h) = 2h u'(x) + \frac{1}{3}h^3 u^{(3)}(x) + \frac{h^5}{120}\left( u^{(5)}(x+\theta_1 h) + u^{(5)}(x+\theta_2 h) \right). \label{eq:diff_h}
 \end{equation}
@@ -152,10 +197,8 @@ avec $\epsilon$ l'erreur de consistance
 \epsilon = - \frac{h^2}{2} \left[ \frac{4}{15}\left( u^{(5)}(x+2\theta_3 h) + u^{(5)}(x+2\theta_4 h) \right) - \frac{1}{60}\left( u^{(5)}(x+\theta_1 h) + u^{(5)}(x+\theta_2 h) \right) \right]. \label{eq:erreur_exacte}
 \end{equation}
 
-\vspace{5cm}
-\textbf{(à faire potentiellement dans une autre section)}
-
-Majoration de l'erreur de consistance 
+\vspace{0.5cm}
+\textbf{Majoration de l'erreur de consistance}
 
 Notons $M_5 = \sup_{t \in \mathcal{D}} |u^{(5)}(t)|$.
 
@@ -171,6 +214,13 @@ Ainsi,
 |\epsilon| \leq \frac{h^2}{2} \times \frac{17}{30} M_5 = \frac{17}{60} h^2 M_5.
 \end{equation}
 
-Le schéma aux différences finies centrées pour la dérivée troisième est consistant d'ordre 2. 
+Le schéma aux différences finies centrées pour la dérivée troisième est consistant d'ordre 2.
 
+\section*{Sources}
+
+\nocite{*}
+\bibliographystyle{plain} 
+\bibliography{sources}   
+
+\end{footnotesize}
 \end{document}
