@@ -13,6 +13,7 @@ venv/
 
 *.synctex.gz
 *.aux
+*.out
 *.fdb_latexmk
 *.fls
 *.log
