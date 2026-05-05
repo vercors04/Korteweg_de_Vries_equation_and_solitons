@@ -96,6 +96,9 @@ Ceci cause différents problème lors de la simulation :
     \item \textbf{Ralentissement :} L'onde accumule un retard par rapport à la solution analytique.
     \item \textbf{Perte d'amplitude :} L'amplitude de l'onde diminue au cours du temps.
     \item \textbf{Fausses collisions :} Elle en avait parler (je crois) mais je sais plus.
+      => Correction : le problème de fausses collisions c'est du au fait que je
+      me servait de la solution analytique pour additionner 2 solitons. Or l'EDP
+      n'est pas linéaire donc EQ-soliton1 + EQ-soliton2 $\ne$ Solution-an-soliton1+Solution-an-soliton2
 \end{itemize}
 
 Pour rendre le schéma pertinent il faudrait conserver la non linéarité. 
