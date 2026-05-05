@@ -1,10 +1,11 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{geometry}
 \usepackage{lmodern}
 \usepackage{tcolorbox}
+\usepackage{empheq}
 
 \geometry{hmargin=2cm,vmargin=1.5cm}
 \setlength{\parindent}{0pt}
@@ -36,14 +37,14 @@ On pose $\xi=x-ct$
 
 \vspace{0.5cm}
 Calcul des dérivées :
-\begin{align*}
+\begin{empheq}[box=\fbox]{align*}
 \frac{\partial u}{\partial t} =\frac{dz}{dt}
 &=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial t}=-c\frac{dz}{d\xi} \\
 \frac{\partial u}{\partial x}=\frac{dz}{dx}
 &=\frac{dz}{d(x-ct)}\frac{\partial(x-ct)}{\partial x}=\frac{dz}{d\xi} \\
 \frac{\partial^{3}u}{\partial x^{3}} &=
 \left(\frac{\partial}{\partial x}\right)^{3}u=\frac{d^{3}z}{d\xi^{3}}
-\end{align*}
+\end{empheq}
 
 On substitue (\ref{eq:z}) à (\ref{eq:initiale}) et on obtient :
 \[ \boxed{-c\frac{dz(\xi)}{d\xi}+\epsilon z(\xi)\frac{dz(\xi)}{d\xi}+\mu\frac{d^{3}z(\xi)}{d\xi^{3}}=0} \]
@@ -61,8 +62,6 @@ On multiplie par $\frac{dz}{d\xi}$ :
   C_{1}dz &=-cz dz+\frac{\epsilon}{2}z^{2}dz+\mu\frac{d^{2}z}{d\xi^{2}}dz
 \end{align*}
 
-\newpage{}
-
 On intègre des deux côtés et on pose une constante d'intégration $C_2$ :
 \begin{align*}
   C_{1}\int dz &=-c\int z dz+\frac{\epsilon}{2}\int z^{2}dz
@@ -78,6 +77,8 @@ Ce qui implique que $C_{1}=C_{2}=0$.
 
 Ainsi :
 \begin{align}
+  C_{1}z+C_{2} &=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}
+  +\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \notag\\
   0 &=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3}+\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} \notag \\
   -\frac{1}{2}\mu\left(\frac{dz}{d\xi}\right)^{2} &=-\frac{c}{2}z^{2}+\frac{\epsilon}{6}z^{3} \notag \\
   \left(\frac{dz}{d\xi}\right)^{2} 
@@ -126,8 +127,6 @@ On substitue $z$ et $dz$ dans \eqref{eq:separee} :
 \frac{2 \, dg}{g \sqrt{\frac{c}{\mu}-g^2}} &= d\xi \label{eq:eq_a_int}
 \end{align}
 
-\newpage
-
 On note $\xi_{0}$ le point auquel $z(\xi_{0})=\max{z}$. Ainsi,
 d'après \eqref{eq:intro_g}, $g(\xi_{0})=\max{g}$\\
 
@@ -139,6 +138,8 @@ lorsque $\frac{dz}{d\xi}=0$. On suppose $z\ne 0$.
   \frac{c}{\mu}-\frac{\epsilon}{3\mu}z_{max} &=0 \\
   z_{max} &= \frac{3c}{\epsilon}
 \end{align*}
+
+\newpage{}
 
 On cherche la valeur correspondante pour $g$
 
@@ -160,7 +161,7 @@ $$
 \text{sech}^{-1}\left(\frac{\eta}{\sqrt{\frac{c}{\mu}}}\right) \right]^{\eta=g(\xi)}_{\eta=\sqrt{\frac{c}{\mu}}} = (\xi - \xi_0)
 $$
 
-Sachant que $\text{sech}^{-1}=0$, on a :
+Sachant que $\text{sech}^{-1}(1)=0$, on a :
 
 \begin{align}
   2 \left( - \frac{1}{\sqrt{\frac{c}{\mu}}}
@@ -169,8 +170,6 @@ Sachant que $\text{sech}^{-1}=0$, on a :
   \frac{g(\xi)}{\sqrt{\frac{c}{\mu}}} &= \text{sech}\left( \frac{(\xi - \xi_0)}{2} \sqrt{\frac{c}{\mu}} \right) \notag\\
 g(\xi) &=\boxed{\sqrt{\frac{c}{\mu}} \text{sech}\left( \frac{(\xi - \xi_0)}{2} \sqrt{\frac{c}{\mu}} \right)} \label{eq:g_final}
 \end{align}
-
-\newpage{}
 
 On substitue \eqref{eq:g_final} à \eqref{eq:intro_g} et on obtient :
 \[ z(\xi) = \frac{3\mu}{\epsilon} \left( \sqrt{\frac{c}{\mu}} \text{sech}\left( \frac{(\xi - \xi_0)}{2} \sqrt{\frac{c}{\mu}} \right) \right)^2 \]
