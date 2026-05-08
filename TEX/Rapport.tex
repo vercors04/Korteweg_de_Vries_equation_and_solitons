@@ -231,7 +231,7 @@ Pour la dérivée première en espace, on utilise la formule de différences fin
 Pour la dérivée troisième en espace, voir (\hyperref[annexe:demo1]{1}) (ordre 2) :
 \[ \frac{\partial^3 u}{\partial x^3}(x_i, t_n) \approx \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \]
 
-\section{Schéma de Crank-Nicolson}
+\subsection{Schéma de Crank-Nicolson}
 
 Pour garantir la stabilité inconditionnelle et une précision d'ordre 2 en temps, nous appliquons le schéma de Crank-Nicolson. 
 
@@ -246,7 +246,7 @@ Nous avons donc :
 + \frac{\mu}{2} \left[ \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right] = 0
 \end{multline*}
 
-\subsection{Formulation matricielle du problème discret}
+\subsubsection{Formulation matricielle du problème discret}
 
 On construit un système linéaire de la forme $A U^{n+1} = B U^n$, (on sépare les termes en $n+1$ des termes évalués au temps $n$).
 
@@ -276,7 +276,7 @@ Ce qui donne :
 
 Ce système forme une équation matricielle creuse $A U^{n+1} = B U^n$ asymétrique, qu'il suffit d'inverser à chaque itération temporelle.
 
-\subsection{Conditions aux limites}
+\subsubsection{Conditions aux limites}
 
 Avec la discrétisation de la dérivée troisième nous avons besoin des points $i-1$, $i+1$, $i-2$, $i+2$ pour une équation au nœud $i$.
 
@@ -291,26 +291,24 @@ Ceci cause différents problème lors de la simulation :
 \begin{itemize}
     \item \textbf{Ralentissement :} L'onde accumule un retard par rapport à la solution analytique.
     \item \textbf{Perte d'amplitude :} L'amplitude de l'onde diminue au cours du temps.
-    \item \textbf{Fausses collisions :} Elle en avait parler (je crois) mais je sais plus.
-      => Correction : le problème de fausses collisions c'est du au fait que je
-      me servait de la solution analytique pour additionner 2 solitons. Or l'EDP
-      n'est pas linéaire donc EQ-soliton1 + EQ-soliton2 $\ne$ Solution-an-soliton1+Solution-an-soliton2
+    \item \textbf{Fausses collisions :} Nous avons fait face à un problème de fausse colisions du au fait qu'on
+      se servait de la solution analytique pour additionner 2 solitons. Or l'EDP n'est pas linéaire donc EQ-soliton1 + EQ-soliton2 $\ne$ Solution-an-soliton1+Solution-an-soliton2
 \end{itemize}
 
 Pour rendre le schéma pertinent il faudrait conserver la non linéarité. 
 
 \textbf{PARTIE A COMPLETER/SUPPRIMER}
 
-\section{Schéma Crank-Nicolson avec la méthode prédicteur-correcteur}
+\subsection{Schéma Crank-Nicolson avec la méthode prédicteur-correcteur}
 
 Dans notre schéma de Crank-Nicolson précédent, nous ne sommes pas centrés en $t_{n+1/2}$ sur le terme non linéaire (on fige $\epsilon u$ au temps $n$), ce qui introduit une erreur et dégrade la précision ; on évalue tout en $t_{n+1/2}$ sauf ce terme, qui nous fait revenir à une précision d'ordre 1 en temps. On va donc calculer le terme non linéaire au temps $t_{n+1/2}$ en additionnant le $u^{n+1}$ futur et le $u^n$ présent puis en divisant par 2. 
 
 Dans un premier temps, on considère que le terme non linéaire est égal à $u^n$ et on résout le système $A(U^n) U^* = B(U^n) U^n$. $U^*$ est une prédiction de l'état futur, qui est donc faussée à cause du terme non linéaire figé sur le passé. On a donc une idée de là où l'on va être et on sait là où l'on est. Ainsi, on peut calculer le terme non linéaire $u_{milieu} = \frac{u^n + u^*}{2}$, qui est une approximation au temps $t_{n+1/2}$, plus fidèle à la réalité que ce qu'elle était juste au temps $n$. 
 
 Maintenant, on refait la résolution mais au lieu de mettre $u^n$ dans la variable $\gamma$, on met $u_{milieu}$, ce qui nous donne une solution d'ordre 2. 
-\textbf{Cependant, c'est toujours une linéarisation donc jsp.}
+Cependant, c'est toujours une linéarisation mais beaucoup plus précise car elle est centrée en $t_{n+1/2}$.
 
-\section{Schéma Explicite}
+\subsection{Schéma Explicite}
 
 Pour éviter d'avoir à linéariser le terme non linéaire on construit un schéma complètement explicite, l'intégralité des dérivées spatiales est évaluée à l'instant connu $t_n$.
 
@@ -332,6 +330,63 @@ Cela n'est pas le cas avec la méthode de Crank-Nicolson qui est inconditionelle
 \textbf{trucs des contraintes à dévelloper, pas sur de tout}
 
 \newpage
+
+\section{Implémentation de la solution analytique}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{image.png}
+    \caption{Densité macroscopique $\rho(t,x)$ reconstruite à $t = T$}
+    \label{fig:figure_simple}
+\end{figure}
+
+Nous avons implenté la solution analytique (figure) via une fonction python. 
+
+\section{Comparaison résultats}
+
+On compare les différentes approches introduites, pour simuler un soliton sur le domaine $x \in [-15, 15]$ jusqu'à $t=10.0$
+Solution Analytique : référence exacte
+Crank-Nicolson (CN) Sparse Classique : s
+CN Prédicteur-Correcteur (PC)
+Explicite Leap-frog
+
+On part avec $N_x = 1000$, $N_t = 700$
+
+\section{Q3}
+
+
+\section{Q4}
+
+
+\section{Q5}
+
+
+\begin{figure}[H]
+    \centering
+
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{image1.png}
+        \caption{Distribution des vitesses à $t = T$}
+        \label{fig:1a}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{image2.png}
+        \caption{Distribution des positions à $t = T$}
+        \label{fig:1b}
+    \end{minipage}
+
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{image.png}
+    \caption{Densité macroscopique $\rho(t,x)$ reconstruite à $t = T$}
+    \label{fig:figure_simple}
+\end{figure}
+
 \appendix
 \begin{footnotesize}
 
