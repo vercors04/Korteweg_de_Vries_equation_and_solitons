@@ -8,6 +8,8 @@
 \usepackage[colorlinks=true, linkcolor=blue]{hyperref}
 \usepackage{tcolorbox}
 \usepackage{empheq}
+\usepackage{float}
+\usepackage{subcaption}
 
 \geometry{hmargin=2cm,vmargin=1.5cm}
 \setlength{\parindent}{0pt}
@@ -15,20 +17,45 @@
 
 \begin{document}
 
-\begin{center}
-    \rule{\linewidth}{0.5pt} \\
-    \Large \textbf{Equation de Korteweg-de Vries} \\
-    \rule{\linewidth}{0.5pt} \\
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    \rule{\linewidth}{1pt}\\[0.5cm]
+    {\Huge \textbf{Équation de Korteweg--de Vries}}\\[0.4cm]
+    {\Large \textit{Résolution numérique et solitons}}\\[0.3cm]
+    \rule{\linewidth}{1pt}\\[1cm]
+
+    \[
+      \LARGE
+      \frac{\partial u(x,t)}{\partial t}
+      + \varepsilon\, u(x,t)\,\frac{\partial u(x,t)}{\partial x}
+      + \mu\,\frac{\partial^{3}u(x,t)}{\partial x^{3}} = 0
+    \]
+
     \vspace{0.5cm}
-    \[ \frac{\partial u(x,t)}{\partial t}+\epsilon u(x,t)\frac{\partial u(x,t)}{\partial x}+\mu\frac{\partial^{3}u(x,t)}{\partial x^{3}}=0 \]
-\end{center}
+    {\small Amyne \quad \& \quad Xavier}\\[1cm]
+
+    \begin{minipage}{0.85\textwidth}
+        \tableofcontents
+    \end{minipage}
+
+\end{titlepage}
 
 \section{Introduction}
 
 \subsection{Contexte historique}
 En 1834 que l'Écossais John Scott Russell observe une grande vague 
-solitaire qui se propage sur plusieurs kilomètres sur le canal de l'Union à
-Édimbourg, conservant sa forme et sa vitesse sans se dissiper.
+solitaire qui se propage sur plusieurs kilomètres sur le canal de l'Union à Édimbourg, conservant sa forme et sa vitesse sans se dissiper. 
+
+\begin{quotation}
+\itshape
+``I was observing the motion of a boat which was rapidly drawn along a narrow
+channel by a pair of horses \dots\ which I have called the Wave of Translation.''
+
+\vspace{0.5em}
+\hfill -- La citation complète est donnée en annexe~\ref{ann:russell_quote}.
+\end{quotation}
 
 En 1895, Diederik Korteweg et Gustav de Vries formalisent mathématiquement
 ce phénomène avec l'équation KdV - bien qu'elle fut indépendamment introduite
@@ -36,21 +63,19 @@ par Joseph Valentin Boussinesq en 1877 - modélisant la propagation des ondes
 en eaux peu profondes.
 
 \subsection{Définitions}
-\begin{definition}
+
 \textbf{Soliton :} « Un soliton est une onde solitaire qui préserve 
 asymptotiquement sa forme et sa vitesse lors d'une interaction non linéaire 
 avec d'autres ondes solitaires, ou plus généralement, avec toute autre 
 perturbation localisée arbitraire. » \cite{Helal2022}
-\end{definition}
 
-\begin{definition}
 \textbf{Équation de Korteweg - de Vries :} « L'équation de Korteweg-de Vries (KdV)
 est un modèle mathématique des ondes à la surface des eaux peu profondes. Elle
 est particulièrement célèbre en tant qu'exemple prototypique d'un modèle 
 exactement soluble, c'est-à-dire une équation aux dérivées partielles non 
 linéaire dont les solutions peuvent être déterminées de manière exacte et 
 précise. » \cite{Helal2022}
-\end{definition}
+
 
 \section{Équation de Korteweg - de Vries et solution analytique}
 
@@ -63,11 +88,9 @@ forme suivante :
   \label{eq:initiale}
 \end{equation}
 
-TEXTE INTRODUCTIF A LA DEMO 
+On cherche à trouver une solution analytique à notre équation \eqref{eq:initiale}.
 
-On part de notre EDP \eqref{eq:initiale}.
-
-On pose $\xi=x-ct$, ce qui donne :
+Posons $\xi=x-ct$, ce qui donne :
 \begin{equation}
   u(x,t)=z(x-ct)=z(\xi)
   \label{eq:z}
@@ -148,7 +171,7 @@ On pose :
 \begin{tcolorbox}[
   colback=black!5!white,
   colframe=white!50!black,
-  title=Rappel,
+  title=Rappel :,
   fonttitle=\bfseries
 ]
 \begin{equation}
@@ -216,42 +239,63 @@ La solution analytique est donc, pour $\xi = x - ct$ :
 \end{equation}
 
 
-
 \section{Discrétisation et approximations générales}
 
 Considérons une subdivision uniforme $(x_{j})_{j=0,\dots,J}$ de l'intervalle $[a, b]$ de pas $h_{x}$ constant. Nous considérons également un intervalle de temps de la forme $[0, T]$ où $T>0$ et une subdivision uniforme $(t_{n})_{n=0,\dots,N}$ de l'intervalle $[0, T]$ de pas $h_{t}$ constant.
 
-
 Pour la dérivée temporelle, on considère l'approximation par différence finie progressive :
 \[ \frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} \]
 
-Pour la dérivée première en espace, on utilise la formule de différences finies centrées (précision d'ordre 2) : 
+Pour la dérivée première en espace, on utilise la formule de différences finies centrées (précision d'ordre 2) :
 \[ \frac{\partial u}{\partial x}(x_i, t_n) \approx \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \]
 
 Pour la dérivée troisième en espace, voir (\hyperref[annexe:demo1]{1}) (ordre 2) :
 \[ \frac{\partial^3 u}{\partial x^3}(x_i, t_n) \approx \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \]
 
+\subsection{Schéma Explicite}
+
+Nous partons du principe que nous voulons éviter de linéariser le terme non linéaire. On construit donc un schéma complètement explicite, l'intégralité des dérivées spatiales est évaluée à l'instant connu $t_n$.
+
+Notre discrétisation est :
+\begin{equation*}
+\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} + \varepsilon u_i^{[n]} \left( \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right) + \mu \left( \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right) = 0
+\end{equation*}
+
+Pour ce schéma, nous n'avons pas besoin de faire une inversion des matrices car l'état futur $u^{[n+1]}$ est calculé uniquement à partir des informations déjà connues aux temps présents et passés (ce qui rend l'algorithme plus performant qu'avec la méthode de Crank-Nicolson). Cependant ce schéma est limité à l'ordre 1 en temps. Pour pallier à cela nous utilisons le schéma de \og Leap-Frog \fg{}, qui nous permet d'améliorer la précision. C'est un schéma à trois niveaux de temps : $t_{n-1}$, $t_n$, $t_{n+1}$. On centre la dérivée temporelle sur l'instant $t_n$ et on obtient :
+\[ \frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{[n+1]} - u_i^{[n-1]}}{2 h_t} \]
+
+L'équation discrétisée devient alors :
+\[ \frac{u_i^{[n+1]} - u_i^{[n-1]}}{2 h_t} + \varepsilon u_i^{[n]} \left[ \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right] + \mu \left[ \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right] = 0 \]
+
+Avec ce schéma, un des problèmes est que nous ne pouvons pas démarrer la simulation à $n=0$ puisque $t_{-1}$ n'existe pas. Ainsi, on effectue le tout premier pas de temps avec un schéma d'Euler explicite (ordre 1) :
+\[ u_i^{[1]} = u_i^{[0]} - h_t \cdot F(u_i^{[0]}) \]
+C'est pour cela que bien que plus précis, le schéma reste d'ordre 1 en temps.
+
+\smallskip
+
+Un autre inconvénient de ce schéma est que nous devons imposer une condition CFL stricte pour assurer la stabilité. La contrainte de cette condition est $\Delta t = \mathcal{O}(\Delta x^3)$. Cela pose problème car lorsque l'on veut augmenter la précision du pas en espace, nous devons drastiquement diminuer $h_t$, ce qui rend le calcul beaucoup plus long si l'on veut une précision en espace plus élevée. Cela n'est pas le cas avec la méthode de Crank-Nicolson qui est inconditionnellement stable, que nous allons donc étudier.
+
 \subsection{Schéma de Crank-Nicolson}
 
-Pour garantir la stabilité inconditionnelle et une précision d'ordre 2 en temps, nous appliquons le schéma de Crank-Nicolson. 
+Pour garantir la stabilité inconditionnelle et une précision d'ordre 2 en temps, nous appliquons le schéma de Crank-Nicolson.
 
-On évalue l'équation au point $t_{n+1/2}$, ce qui donne $\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t}$.
+On évalue l'équation au point $t_{n+1/2}$, pour obtenir une erreur de consistance en $\mathcal{O}(h_t^2)$. On prend donc $\dfrac{u_i^{[n+1]} - u_i^{[n]}}{h_t}$.
 
-Par rapport au terme non linéaire $\epsilon u \frac{\partial u}{\partial x}$, nous choisissons de le linéariser afin de conserver un système qu'on puisse résoudre sous forme matricielle. $u$ en facteur de la dérivée est « figée » à sa valeur connue $u_i^{[n]}$.
+Le problème reste le terme non linéaire $\varepsilon u \dfrac{\partial u}{\partial x}$. Nous choisissons de le linéariser afin de conserver un système que l'on puisse résoudre sous forme matricielle. $u$ en facteur de la dérivée est \og figée \fg{} à sa valeur connue $u_i^{[n]}$.
 
 Nous avons donc :
 \begin{multline*}
-\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} + \epsilon u_i^{[n]} \left[ \frac{1}{2} \left( \frac{u_{i+1}^{[n+1]} - u_{i-1}^{[n+1]}}{2 h_x} \right) + \frac{1}{2} \left( \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right) \right] \\
+\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} + \varepsilon u_i^{[n]} \left[ \frac{1}{2} \left( \frac{u_{i+1}^{[n+1]} - u_{i-1}^{[n+1]}}{2 h_x} \right) + \frac{1}{2} \left( \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right) \right] \\
 + \frac{\mu}{2} \left[ \frac{u_{i+2}^{[n+1]} - 2u_{i+1}^{[n+1]} + 2u_{i-1}^{[n+1]} - u_{i-2}^{[n+1]}}{2 h_x^3} \right] \\
 + \frac{\mu}{2} \left[ \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right] = 0
 \end{multline*}
 
 \subsubsection{Formulation matricielle du problème discret}
 
-On construit un système linéaire de la forme $A U^{n+1} = B U^n$, (on sépare les termes en $n+1$ des termes évalués au temps $n$).
+On construit un système linéaire de la forme $A U^{[n+1]} = B U^{[n]}$ (on sépare les termes en $n+1$ des termes évalués au temps $n$).
 
-On multiplie par $h_t$ et on poste les constantes :
-\[ \alpha = \frac{\mu h_t}{h_x^3} \quad \text{et} \quad \beta = \frac{\epsilon h_t}{h_x} \]
+On multiplie par $h_t$ et on pose les constantes :
+\[ \alpha = \frac{\mu h_t}{h_x^3} \quad \text{et} \quad \beta = \frac{\varepsilon h_t}{h_x} \]
 
 L'équation devient :
 \begin{multline*}
@@ -269,131 +313,304 @@ On définit $\gamma_i^{[n]}$ :
 \[ \gamma_i^{[n]} = \frac{\alpha}{2} - \frac{\beta}{4} u_i^{[n]} \]
 
 Ce qui donne :
-\begin{multline} \label{eq:schema_final}
+\begin{multline}
+\label{eq:schema_final}
 - \frac{\alpha}{4} u_{i-2}^{[n+1]} + \gamma_i^{[n]} u_{i-1}^{[n+1]} + u_i^{[n+1]} - \gamma_i^{[n]} u_{i+1}^{[n+1]} + \frac{\alpha}{4} u_{i+2}^{[n+1]} \\
 = \frac{\alpha}{4} u_{i-2}^{[n]} - \gamma_i^{[n]} u_{i-1}^{[n]} + u_i^{[n]} + \gamma_i^{[n]} u_{i+1}^{[n]} - \frac{\alpha}{4} u_{i+2}^{[n]}
 \end{multline}
 
-Ce système forme une équation matricielle creuse $A U^{n+1} = B U^n$ asymétrique, qu'il suffit d'inverser à chaque itération temporelle.
+Ce système forme une équation matricielle creuse $A U^{[n+1]} = B U^{[n]}$ asymétrique, qu'il suffit d'inverser à chaque itération temporelle.
 
 \subsubsection{Conditions aux limites}
 
 Avec la discrétisation de la dérivée troisième nous avons besoin des points $i-1$, $i+1$, $i-2$, $i+2$ pour une équation au nœud $i$.
 
 Nous imposons des conditions de Dirichlet homogènes aux extrémités :
-\[ u_0^{[n]} = u_1^{[n]} = 0 \quad \text{et} \quad u_{Nx-2}^{[n]} = u_{Nx-1}^{[n]} = 0 \quad \forall n \]
+\[ u_0^{[n]} = u_1^{[n]} = 0 \quad \text{et} \quad u_{N_x-2}^{[n]} = u_{N_x-1}^{[n]} = 0 \quad \forall\, n \]
 
 \subsubsection{Limites de l'approche : le problème de la linéarisation}
 
-Le terme non linéaire $\epsilon u \frac{\partial u}{\partial x}$ a été linéarisé en figeant $\epsilon u_i^{[n]}$ à l'instant précédent pour conserver un système matriciel classique $A U^{n+1} = B U^n$. 
-
-Ceci cause différents problème lors de la simulation :
-\begin{itemize}
-    \item \textbf{Ralentissement :} L'onde accumule un retard par rapport à la solution analytique.
-    \item \textbf{Perte d'amplitude :} L'amplitude de l'onde diminue au cours du temps.
-    \item \textbf{Fausses collisions :} Nous avons fait face à un problème de fausse colisions du au fait qu'on
-      se servait de la solution analytique pour additionner 2 solitons. Or l'EDP n'est pas linéaire donc EQ-soliton1 + EQ-soliton2 $\ne$ Solution-an-soliton1+Solution-an-soliton2
-\end{itemize}
-
-Pour rendre le schéma pertinent il faudrait conserver la non linéarité. 
-
-\textbf{PARTIE A COMPLETER/SUPPRIMER}
+Le terme non linéaire $\varepsilon u \dfrac{\partial u}{\partial x}$ a été linéarisé en figeant $\varepsilon u_i^{[n]}$ à l'instant précédent pour conserver un système matriciel classique $A U^{[n+1]} = B U^{[n]}$. En figeant ce terme, l'erreur de consistance sur ce terme passe de $\mathcal{O}(h_t^2)$ à $\mathcal{O}(h_t)$, ce qui redescend l'ordre global effectif du schéma à 1 en temps. Comme développé dans la section~\ref{sec:comparaison}, on observe les conséquences numériques de cette dégradation sur les résultats.
 
 \subsection{Schéma Crank-Nicolson avec la méthode prédicteur-correcteur}
+\label{CK_PC}
 
-Dans notre schéma de Crank-Nicolson précédent, nous ne sommes pas centrés en $t_{n+1/2}$ sur le terme non linéaire (on fige $\epsilon u$ au temps $n$), ce qui introduit une erreur et dégrade la précision ; on évalue tout en $t_{n+1/2}$ sauf ce terme, qui nous fait revenir à une précision d'ordre 1 en temps. On va donc calculer le terme non linéaire au temps $t_{n+1/2}$ en additionnant le $u^{n+1}$ futur et le $u^n$ présent puis en divisant par 2. 
+Dans notre schéma de Crank-Nicolson précédent, nous ne sommes pas centrés en $t_{n+1/2}$ sur le terme non linéaire (on fige $\varepsilon u$ au temps $n$), ce qui introduit une erreur et dégrade la précision ; on évalue tout en $t_{n+1/2}$ sauf ce terme, qui nous fait revenir à une précision d'ordre 1 en temps. On va donc calculer le terme non linéaire au temps $t_{n+1/2}$ en additionnant le $u^{[n+1]}$ futur et le $u^{[n]}$ présent puis en divisant par 2. En construisant $u_{\text{milieu}} = \dfrac{u^{[n]} + u^*}{2}$, on a une approximation de $u$ à $t_{n+1/2}$ avec une erreur de consistance en $\mathcal{O}(h_t^2)$. Ainsi, l'erreur de consistance du terme non linéaire passe en $\mathcal{O}(h_t^2)$, de même pour le schéma \cite{Kwok2011}.
 
-Dans un premier temps, on considère que le terme non linéaire est égal à $u^n$ et on résout le système $A(U^n) U^* = B(U^n) U^n$. $U^*$ est une prédiction de l'état futur, qui est donc faussée à cause du terme non linéaire figé sur le passé. On a donc une idée de là où l'on va être et on sait là où l'on est. Ainsi, on peut calculer le terme non linéaire $u_{milieu} = \frac{u^n + u^*}{2}$, qui est une approximation au temps $t_{n+1/2}$, plus fidèle à la réalité que ce qu'elle était juste au temps $n$. 
+\medskip
 
-Maintenant, on refait la résolution mais au lieu de mettre $u^n$ dans la variable $\gamma$, on met $u_{milieu}$, ce qui nous donne une solution d'ordre 2. 
-Cependant, c'est toujours une linéarisation mais beaucoup plus précise car elle est centrée en $t_{n+1/2}$.
+Dans un premier temps, on considère que le terme non linéaire est égal à $u^{[n]}$ et on résout le système $A(U^{[n]}) U^* = B(U^{[n]}) U^{[n]}$. $U^*$ est une prédiction de l'état futur, qui est donc faussée à cause du terme non linéaire figé sur le passé. On a donc une idée de là où l'on va être et on sait là où l'on est. Ainsi, on peut calculer le terme non linéaire $u_{\text{milieu}} = \dfrac{u^{[n]} + u^*}{2}$, qui est une approximation au temps $t_{n+1/2}$, plus fidèle à la réalité que ce qu'elle était juste au temps $n$.
 
-\subsection{Schéma Explicite}
+\smallskip
 
-Pour éviter d'avoir à linéariser le terme non linéaire on construit un schéma complètement explicite, l'intégralité des dérivées spatiales est évaluée à l'instant connu $t_n$.
+Maintenant, on refait la résolution mais au lieu de mettre $u^{[n]}$ dans la variable $\gamma$, on met $u_{\text{milieu}}$, ce qui nous donne une solution d'ordre 2. Cette résolution nécessite deux résolutions du système linéaire par pas de temps au lieu d'une, ce qui justifiera un temps de résolution plus long qu'avec le CN classique.
 
-Notr discrétisation est :
-\begin{equation*}
-\frac{u_i^{[n+1]} - u_i^{[n]}}{h_t} + \epsilon u_i^{[n]} \left( \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right) + \mu \left( \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right) = 0
-\end{equation*}
+\medskip
 
-Pour ce schéma, nous n'avons pas besoin de faire une inversion des matrices car l'état futur $u^{n+1}$ est calculé uniquement à partir des informations déjà connues aux temps présents et passés (ce qui rends l'algorithme plus performant qu'avec la méthode de Crank-Nicolson). Cependant ce schéma est limité à l'ordre 1 en temps. Pour pallier à cela nous utilisons le schéma de "Leap-Frog", qui nous permet d'améliorer la précision bien que nous restons d'ordre 1 en temps à cause de la première itération. C'est un schéma à trois niveaux de temps : $t_{n-1}$, $t_n$, $t_{n+1}$. On centre la dérivée temporelle sur l'instant $t_n$ et on obtient $$ \frac{\partial u}{\partial t}(x_i, t_n) \approx \frac{u_i^{[n+1]} - u_i^{[n-1]}}{2 h_t} $$. 
+Le schéma complet est donc, avec $\gamma_i^{\text{corr}} = \dfrac{\alpha}{2} - \dfrac{\beta}{4}(u_{\text{milieu}})_i$ :
 
-L'équation discrétisée devient alors :$$ \frac{u_i^{[n+1]} - u_i^{[n-1]}}{2 h_t} + \epsilon u_i^{[n]} \left[ \frac{u_{i+1}^{[n]} - u_{i-1}^{[n]}}{2 h_x} \right] + \mu \left[ \frac{u_{i+2}^{[n]} - 2u_{i+1}^{[n]} + 2u_{i-1}^{[n]} - u_{i-2}^{[n]}}{2 h_x^3} \right] = 0 $$
-
-Avec ce schéma un des problème est que nous ne pouvons pas démarrer la simulation à $n=0$ puisque $t_{-1}$ n'existe pas. Ainsi, on effectue le tout premier pas de temps avec un schéma d'Euler explicite (ordre 1) :$$ u_i^{[1]} = u_i^{[0]} - h_t \cdot \text{F}(u_i^{[0]}) $$
-
-Un autre inconvénient de ce schéma est que nous devons imposer une condition CFL pour assurer la stabilité. La contrainte de cette condition est $\Delta t = \mathcal{O}(\Delta x^3)$. Cela pose problème car lorsque l'on veut augmenter la précision du pas en espace on est obligé de drastiquement diminuer $h_t$, ce qui rend le calcul beaucoup plus long si l'on veut une précision en espace plus élevée. 
-Cela n'est pas le cas avec la méthode de Crank-Nicolson qui est inconditionellement stable. 
-
-
-\textbf{trucs des contraintes à dévelloper, pas sur de tout}
+\begin{multline}
+\label{eq:schema_pc}
+- \frac{\alpha}{4} u^{[n+1]}_{i-2} + \gamma_i^{\text{corr}}\, u^{[n+1]}_{i-1} + u^{[n+1]}_i - \gamma_i^{\text{corr}}\, u^{[n+1]}_{i+1} + \frac{\alpha}{4} u^{[n+1]}_{i+2} \\
+= \frac{\alpha}{4} u_{i-2}^{[n]} - \gamma_i^{\text{corr}}\, u_{i-1}^{[n]} + u_i^{[n]} + \gamma_i^{\text{corr}}\, u_{i+1}^{[n]} - \frac{\alpha}{4} u_{i+2}^{[n]}
+\end{multline}
 
 \newpage
 
-\section{Implémentation de la solution analytique}
+\section{Solution analytique \& comparaison des schémas}
+\label{sec:comparaison}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{image.png}
-    \caption{Densité macroscopique $\rho(t,x)$ reconstruite à $t = T$}
-    \label{fig:figure_simple}
+    \includegraphics[width=0.8\textwidth]{figures/sol_analytique.png}
+    \caption{Solution analytique à $t = 0$, soliton centré en $x_0 = -5$.}
+    \label{fig:sol_analytique}
 \end{figure}
 
-Nous avons implenté la solution analytique (figure) via une fonction python. 
+Nous avons implémenté la solution analytique (figure~\ref{fig:sol_analytique}) via une fonction Python. Le profil initial est une cloche symétrique centrée de hauteur $3c/\varepsilon$. On a donc une cloche d'une amplitude de $15$.
 
-\section{Comparaison résultats}
+Le domaine de simulation est $x \in [-15, 15]$ avec $N_x = 1000$ points, ce qui donne un pas spatial $h_x = 30/999 \approx 0{,}03$. Le temps de simulation est $T = 10$ avec $N_t = 700$ pas, soit $h_t \approx 0{,}014$.
 
-On compare les différentes approches introduites, pour simuler un soliton sur le domaine $x \in [-15, 15]$ jusqu'à $t=10.0$
-Solution Analytique : référence exacte
-Crank-Nicolson (CN) Sparse Classique : s
-CN Prédicteur-Correcteur (PC)
-Explicite Leap-frog
+\medskip
 
-On part avec $N_x = 1000$, $N_t = 700$
+On compare les différents schémas introduits.
 
-\section{Q3}
+\medskip
+\noindent\textbf{Explicite Leap-frog :}
 
+\smallskip
 
-\section{Q4}
+Comme vu précédemment, le problème majeur de ce schéma est la condition CFL assez stricte.
+Avec nos paramètres, on a $C \approx 1/(6\mu + \varepsilon \cdot u_{\max}) \approx 0{,}28$,
+$h_x = 0{,}03$, la condition impose
+\[
+h_t \leq C \cdot h_x^3 \approx 0{,}28 \times (0{,}03)^3 \approx 7{,}6 \times 10^{-6},
+\]
+or le pas en temps utilisé pour les méthodes de Crank-Nicolson est $h_t \approx 0{,}014$,
+soit environ 1800 fois supérieur à cette limite. Le schéma ne tourne pas avec ces paramètres,
+il diverge immédiatement. Nous avons utilisé $N_x = 400$ et $N_t = 50\,000$ sur $T_f = 10$,
+soit $h_t = 2 \times 10^{-4}$, qui satisfait cette limite. L'erreur $L^2$ est de $0{,}52$
+à $t = T/2$ et $1{,}05$ à $t = T$, soit environ $4$ fois plus grande que le CN-PC. Le temps
+de calcul est alors de $1{,}62$~s pour une résolution spatiale $2{,}5$ fois plus grossière
+que les méthodes de Crank-Nicolson. Ainsi, nous n'avons pas continué avec ce schéma.
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lc}
+        \hline
+        Schéma & Temps de calcul \\
+        \hline
+        CN Sparse Classique       & $0{,}83$~s \\
+        CN Prédicteur-Correcteur  & $1{,}58$~s \\
+        Solution Analytique       & $0{,}02$~s \\
+        Explicite Leap-frog       & $1{,}62$~s \\
+        \hline
+    \end{tabular}
+    \caption{Temps de calcul pour $N_x = 400$, $N_t = 50\,000$.}
+    \label{tab:temps_lf}
+\end{table}
 
-\section{Q5}
+\medskip
+\noindent\textbf{Crank-Nicolson (CN) Sparse Classique :}
 
+\smallskip
+
+On repart du schéma construit précédemment~\eqref{eq:schema_final}, avec les paramètres $N_x = 1000$ et $N_t = 700$. Les matrices sont creuses pentadiagonales, ce qui raccourcit drastiquement le temps de calcul.
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=1\textwidth]{figures/comparaison_schemas.png}
+    \caption{Comparaison CN Classique, CN Prédicteur-Correcteur et solution analytique à $t = T/2$ et $t = T$.}
+    \label{fig:comparaison}
+\end{figure}
 
-    \begin{minipage}{0.45\textwidth}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccc}
+        \hline
+        Schéma & Temps de calcul & Erreur $L^2$ à $t = T/2$ & Erreur $L^2$ à $t = T$ \\
+        \hline
+        CN Sparse Classique      & $0{,}71$~s & $6{,}72$ & $15{,}3$ \\
+        CN Prédicteur-Correcteur & $1{,}45$~s & $0{,}13$ & $0{,}26$ \\
+        Solution Analytique      & $0{,}02$~s & ---       & ---      \\
+        \hline
+    \end{tabular}
+    \caption{Temps de calcul et erreur $L^2$ à $t = T/2$ et $t = T$ pour $N_x = 1000$, $N_t = 700$.}
+    \label{tab:resultats_cn}
+\end{table}
+
+Le schéma reproduit mal les résultats de la solution analytique : à $t = T/2$ l'erreur $L^2$ atteint $6{,}72$, ce qui est directement visible sur la figure~\ref{fig:comparaison}, avec un retard et une perte d'amplitude par rapport à la solution analytique. À $t = T$, l'erreur $L^2$ atteint $15{,}3$. Ces résultats sont imputables à la linéarisation du terme $u$ au temps $n$, introduisant une erreur en $\mathcal{O}(h_t)$ vue précédemment. Comme prévu, le schéma CN classique est insuffisant pour simuler la propagation d'un soliton.
+
+\medskip
+\noindent\textbf{CN Prédicteur-Correcteur (PC) :}
+
+\smallskip
+
+On reprends le schéma construit précédemment~\eqref{eq:schema_pc}. La méthode prédicteur-correcteur réduit ce déphasage et cette perte d'amplitude. Les résultats sur l'erreur $L^2$ sont bien meilleurs : l'erreur $L^2$ vaut $0{,}13$ à $t = T/2$ et $0{,}26$ à $t = T$, soit $50$ et $60$ fois plus faible qu'avec le CN classique. Sur la figure~\ref{fig:comparaison}, la courbe CN-PC est visuellement confondue avec la solution analytique aux deux instants. Le temps de calcul est cependant plus élevé, passant à $1{,}45$~s, soit environ $2{,}0$ fois plus que celui du CN classique, en raison de la double résolution de système linéaire par pas de temps.
+
+\bigskip
+\newpage
+\section{Amplitude et vitesse}
+\label{amplitude_vitesse}
+Dans notre équation de kdv \eqref{eq:initiale}, le terme $\frac{\partial u}{\partial t}$ indique sur l'évolution en temps, $\varepsilon u\frac{\partial u}{\partial x}$ est le terme de non-linéarité qui a effet sur l'amplitude de l'onde et $\mu \frac{\partial^{3}u}{\partial x^{3}}$ est le terme de dispersion, il a effet sur l'étalement de l'onde. Ainsi, augmenter la valeur de $\varepsilon$ diminue l'amplitude de l'onde et augmenter la valeur de $\mu$ l'élargit.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\linewidth]{figures/var_eps_mu.png}
+    \caption{Fluctuations de la forme du soliton}
+    \label{fig:var_eps_mu}
+\end{figure}
+
+On parvient aisément à déterminer l'amplitude maximale $A$ d'un soliton avec $A=3c/\varepsilon$. On a d'ailleurs : 
+\[
+u(x,t) = A\,\text{sech}^2\left( \frac{1}{2}\sqrt{\frac{c}{\mu}}(\xi - \xi_0) \right)
+\]
+
+Si l'on prend $\varepsilon = 0.2$ et la vitesse $c = 1$, le soliton aura une amplitude de $15$, tandis qu'un soliton de vitesse $c = 0.5$ n'atteint que $7.5$ d'amplitude. Ainsi, la vitesse et l'amplitude sont proportionnelles ; un soliton plus haut est plus rapide. Pour illustrer cela, on observe l'évolution indépendante dans le temps de 4 solitons aux amplitudes différentes avec une position initiale identique.
+
+\begin{figure}[H]
+    \centering
+    \caption{Représentation de l'incidence de la taille des solitons sur leur vitesse}
+    \includegraphics[width=0.95\linewidth]{figures/course_solitons.png}
+    \label{fig:course_solitons}
+\end{figure}
+
+\section{Les collisions de solitons}
+
+Parmi les observations que Russell a fait au sujet des solitons, figure leur propriété étonnante en cas de collision. En effet, il a affirmé qu'un soliton plus large pouvait dépasser un soliton à l'amplitude plus faible (Rapport amplitude-vitesse mentionné dans la partie précédente) et que leur forme restait inchangée après cette rencontre.\\
+
+On cherche à reproduire cette propriété numériquement. Pour ce faire, nous imposons une condition initiale telle qu'un soliton est suivit par un soliton à l'amplitude plus grande. Ainsi, on pose à l'aide de la solution analytique :
+\[
+u(x,0) = u^{0}_{1}(x) + u^{0}_{2}(x)
+\]
+avec $u^{0}_{1}(x) = \frac{3c}{\varepsilon} \text{sech}^2\left[ \frac{1}{2}\sqrt{\frac{c}{\mu}}(x - x_{0,1}) \right]$ et $u^{0}_{2}(x) = \frac{3c}{\varepsilon} \text{sech}^2\left[ \frac{1}{2}\sqrt{\frac{c}{\mu}}(x - x_{0,2}) \right]$ et $x_{0,1},x_{0,2}$ les positions respectives des centres des solitons à l'instant $t=0$.\\
+
+Après cela, nous cherchons une solution numérique pour ces conditions initiales à l'aide du schéma de Crank-Nicolson avec la méthode prédicteur-correcteur (partie \ref{CK_PC}).
+
+\begin{figure}[H]
+    \centering
+    \caption{Etapes dans la rencontre entre deux solitons}
+    \includegraphics[width=1\linewidth]{figures/collision.png}
+    \label{fig:course_solitons}
+\end{figure}
+
+Lors de leur collision, l'interaction entre les solitons peut donner l'impression d'un transfert d'amplitude mais en réalité il ne s'agit que d'une étape de transition. Après la collision, chaque soliton récupère son amplitude et sa forme initiale tout en ayant une position différente dans l'espace.
+
+\newpage
+\section{Un choix particulier de condition initiale}
+La section précédente a mis en avant le fait que le choix des conditions initiales est essentiel dans l'étude des phénomènes liés à cette équation car ce sont elles qui définissent les structures qui émergeront au cours du temps. Ici nous souhaitons mettre en place une condition initiale à deux plateaux traduite par :
+\begin{equation}
+    u(x,0) = \frac{1}{2} \left[ 1 - \tanh\left(\frac{x-25}{5}\right) \right]
+    \label{eq:tan}
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{image1.png}
-        \caption{Distribution des vitesses à $t = T$}
-        \label{fig:1a}
-    \end{minipage}
+        \caption{Conditions initiales à 2 plateaux (A)}
+        \includegraphics[width=\linewidth]{figures/CIR1.png}
+    \end{subfigure}
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \caption{Conditions initiales à 2 plateaux (B)}
+        \includegraphics[width=\linewidth]{figures/CIR2.png}
+    \end{subfigure}
     \hfill
-    \begin{minipage}{0.45\textwidth}
+    \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{image2.png}
-        \caption{Distribution des positions à $t = T$}
-        \label{fig:1b}
-    \end{minipage}
-
+        \caption{Conditions initiales à 2 plateaux (C)}
+        \includegraphics[width=\linewidth]{figures/CIR3.png}
+    \end{subfigure}
+    \caption{Évolution du problème au cours du temps pour des conditions initiales particulières}
+    \label{fig:CI_russel}
 \end{figure}
+
+On observe au cours du temps que la solution forme progressivement une série de solitons de taille croissante. On explique cela par le lien entre l'amplitude et la vitesse (relation $A = 3c/\varepsilon$) mentionné en partie~(\ref{amplitude_vitesse}). En effet, le plateau supérieur se propage plus vite que le plateau inférieur. Cela étire puis raidit le front, puis tend à s'équilibrer localement et à former un soliton. Ainsi, les plus grands solitons restent devant et les plus petits derrière, créant cette vague continue.
+
+D'après~\cite{Gardner1967}, le nombre de solitons qui se créent n'est pas aléatoire, et est défini par les paramètres de la condition initiale ainsi que son profil. Ainsi, cette division en de nombreux solitons sous cette forme est due à la condition initiale~\eqref{eq:tan}.
+
+\medskip
+
+Lorsque l'on étend nos observations dans le temps, on remarque des interférences aux extrémités de la solution.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{image.png}
-    \caption{Densité macroscopique $\rho(t,x)$ reconstruite à $t = T$}
-    \label{fig:figure_simple}
+    \caption{Apparition d'interférences à un certain temps}
+    \includegraphics[width=0.65\linewidth]{figures/CIR4.png}
+    \label{fig:interferences}
 \end{figure}
+
+Les ondes parasites entourées par un cercle rouge s'expliquent par le choix des conditions aux limites dans la création de notre schéma. En effet, les conditions aux limites de Dirichlet homogènes choisies imposent que la solution soit nulle aux bords. Ainsi, quand les solitons atteignent le bord, cela crée une réflexion artificielle. Pour pallier à cela, on pourrait implémenter des conditions aux limites périodiques. Augmenter le domaine spatial permet cependant d'observer suffisamment le phénomène. Nous avons étendu le domaine de $x \in [-5, 150]$ à $x \in [-5, 500]$, avec $N_x = 3000$ et $N_t = 5000$ sur $T_f = 500$. Cela garantit que les solitons n'atteignent pas le bord droit pendant la simulation.
+
+On remarque aussi (encadré en rouge sur la figure) des oscillations qui se créent à gauche au bout d'un certain temps de simulation. 
+
+\section{Conclusion}
+
+Durant ce projet nous avons pu étudier l'équation de KdV sous l'angle analytique et numérique. En dérivant la solution exacte nous avons abouti à la solution analytique, et à déterminer les caractéristiques des solitons telles que l'amplitude. Ces propriétés sont cohérentes et vérifiées durant le projet en les comparant aux observations de Russell.
+
+Sur le plan numérique nous avons implémenté et comparé trois schémas de discrétisation. Le schéma Leap-frog s'est révélé inutilisable en raison de sa condition CFL. En étudiant le schéma de Crank-Nicolson classique nous avons abouti à la variante prédicteur-correcteur qui permettait de centrer le terme non linéaire et de garantir la stabilité. Après analyse et test de ces derniers, nous avons pu en sélectionner un qui convenait à nos exigences.
+
+Grâce à ce schéma nous avons pu vérifier les différentes observations de Russell sur les caractéristiques des solitons, comme le lien entre la vitesse et l'amplitude ou la collision entre plusieurs solitons. Nous avons utilisé une condition initiale différente qui mettait en évidence nos précédentes observations. Les solitons incarnent donc un équilibre entre non linéarité et dispersion, produisant des structures stables et robustes, qui émergent de conditions initiales qui contiennent l'information de la structure. 
 
 \appendix
 \begin{footnotesize}
 
 \phantomsection
+\clearpage
+
+\addcontentsline{toc}{section}{Annexe} 
 \section*{Annexe}
+\subsection*{Citation complète de John Scott Russell}
+\label{ann:russell_quote}
+
+\begin{quotation}
+\itshape
+``I was observing the motion of a boat which was rapidly drawn along a narrow
+channel by a pair of horses, when the boat suddenly stopped --- not so the mass
+of water in the channel which it had put in motion; it accumulated round the
+prow of the vessel in a state of violent agitation, then suddenly leaving it
+behind, rolled forward with great velocity, assuming the form of a large
+solitary elevation, a rounded, smooth and well-defined heap of water, which
+continued its course along the channel apparently without change of form or
+diminution of speed. I followed it on horseback, and overtook it still rolling
+on at a rate of some eight or nine miles an hour, preserving its original
+figure some thirty feet long and a foot to a foot and a half in height. Its
+height gradually diminished, and after a chase of one or two miles I lost it in
+the windings of the channel. Such, in the month of August 1834, was my first
+chance interview with that singular and beautiful phenomenon which I have called
+the Wave of Translation.''
+
+\vspace{0.5em}
+\hfill --- John Scott Russell, \textit{Report on Waves}~\cite{russell1844}
+\end{quotation}
+
+\phantomsection\label{annexe:demo0}
+\subsubsection*{\hyperref[main:demo0]{(1)} Démonstration de la dérivé de $\text{sech}^{-1}(x)$}
+
+On se sert du fait que $$\text{sech}(\text{sech}^{-1}x)=x$$ et que $$\text{sech}'x=-\tanh(x)\text{sech}(x)$$
+
+On prend ensuite la dérivée des deux cotés pour obtenir : $$-\tanh (\text{sech}^{-1} x)\text{sech}(\text{sech}^{-1}\, x)(\text{sech}^{-1}\, x)'  =  1  $$
+
+Or 
+\begin{equation}
+    -x \, \tanh (\text{sech}^{-1}x)(\text{sech}^{-1} \,x)'  =  1 
+    \label{eq:sech_1}
+\end{equation}
+
+On sait que : $$\cosh^2 x - \sinh^2 x  =  1$$
+
+En divisant par $\cosh²(x)$, on a : $$1 - \tanh^2 (x)  = \text{sech}^2\, x$$.
+
+Or $$\tanh x = \sqrt{1-\text{sech}^2 \,x}$$
+
+Donc $$\tanh (\text{sech}^{-1}\, x) = \sqrt{1-\text{sech}^{-1} \, x} = \sqrt{1-x^2}$$
+
+Ainsi, en substituant dans \eqref{eq:sech_1}, on obtient :
+$$-x\sqrt{1-x^2} (\text{sech}^{-1}\, x) = 1 $$
+$$\boxed{\text{sech}^{-1} \, x = \dfrac{-1}{x\sqrt{1-x^2}}}$$
+
 \phantomsection\label{annexe:demo1}
-\subsubsection*{\hyperref[main:demo1]{(1)} Démonstration du schéma aux différences finies centrées pour la dérivée d'ordre 3}
+\subsubsection*{\hyperref[main:demo1]{(2)} Démonstration du schéma aux différences finies centrées pour la dérivée d'ordre 3}
 
 L'objectif est d'établir l'approximation par différences finies de la dérivée troisième $u^{(3)}(x)$.
 
@@ -470,11 +687,11 @@ Ainsi,
 
 Le schéma aux différences finies centrées pour la dérivée troisième est consistant d'ordre 2.
 
-\section*{Sources}
-
+\phantomsection
+\addcontentsline{toc}{section}{Références}
 \nocite{*}
-\bibliographystyle{plain} 
-\bibliography{sources}   
+\bibliographystyle{plain}
+\bibliography{sources}
 
 \end{footnotesize}
 \end{document}
